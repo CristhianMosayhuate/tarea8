@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejercicio 1</title>
+  <link rel="stylesheet" href="./ejercicio1.css">
+</head>
+<body>
+
+  <div class="container">
+    <h2>Buscador de Personajes (Star Wars)</h2>
+    
+    <form id="formBusqueda">
+      <div class="form-group">
+        <label for="idBuscador">Código del Personaje (ID):</label>
+        <input type="number" id="idBuscador" min="1" required placeholder="Ej. 1 para Luke Skywalker">
+      </div>
+      <button type="submit">Buscar</button>
+    </form>
+
+    <div id="animacion" class="loader"></div>
+
+    <hr>
+    
+    <h3>Datos del Personaje</h3>
+    <div class="form-group">
+      <label>Nombre:</label> <input type="text" id="nombre">
+    </div>
+    <div class="form-group">
+      <label>Estatura (cm):</label> <input type="text" id="estatura">
+    </div>
+    <div class="form-group">
+      <label>Peso (kg):</label> <input type="text" id="peso">
+    </div>
+    <div class="form-group">
+      <label>Color de Cabello:</label> <input type="text" id="cabello">
+    </div>
+    <div class="form-group">
+      <label>Género:</label> <input type="text" id="genero">
+    </div>
+
+    <h3>Participaciones</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Películas</th>
+          <th>Vehículos</th>
+          <th>Naves</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td id="countPeliculas">0</td>
+          <td id="countVehiculos">0</td>
+          <td id="countNaves">0</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const formulario = document.getElementById("formBusqueda");
+      const inputId = document.getElementById("idBuscador");
+      const animacion = document.getElementById("animacion");
+
+      const txtNombre = document.getElementById("nombre");
+      const txtEstatura = document.getElementById("estatura");
+      const txtPeso = document.getElementById("peso");
+      const txtCabello = document.getElementById("cabello");
+      const txtGenero = document.getElementById("genero");
+
+      const countPeliculas = document.getElementById("countPeliculas");
+      const countVehiculos = document.getElementById("countVehiculos");
+      const countNaves = document.getElementById("countNaves");
+
+      function resetUI() {
+        txtNombre.value = "";
+        txtEstatura.value = "";
+        txtPeso.value = "";
+        txtCabello.value = "";
+        txtGenero.value = "";
+        countPeliculas.innerText = "0";
+        countVehiculos.innerText = "0";
+        countNaves.innerText = "0";
+      }
+
+      formulario.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const id = parseInt(inputId.value);
+        
+        if (id <= 0 || isNaN(id)) {
+          alert("Por favor ingrese un número válido.");
+          return;
+        }
+        buscarPersonaje(id);
+      });
+
+      async function buscarPersonaje(id) {
+        resetUI();
+        animacion.classList.add("activo");
+
+        try {
+          const URL = `https://swapi.dev/api/people/${id}/`;
+          const respuesta = await fetch(URL);
+
+          if (!respuesta.ok) {
+            animacion.classList.remove("activo");
+            if (respuesta.status === 404) {
+              alert("No existe ningún personaje con este ID.");
+            } else {
+              alert("Error de comunicación con la API.");
+            }
+            return;
+          }
+
+          const datos = await respuesta.json();
+          animacion.classList.remove("activo");
+
+          txtNombre.value = datos.name;
+          txtEstatura.value = datos.height;
+          txtPeso.value = datos.mass;
+          txtCabello.value = datos.hair_color;
+          txtGenero.value = datos.gender;
+
+          countPeliculas.innerText = datos.films.length;
+          countVehiculos.innerText = datos.vehicles.length;
+          countNaves.innerText = datos.starships.length;
+
+        } catch (error) {
+          animacion.classList.remove("activo");
+          console.error("Error en la petición:", error);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

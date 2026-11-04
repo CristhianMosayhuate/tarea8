@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejercicio 2</title>
+  <link rel="stylesheet" href="ejercicio2.css">
+</head>
+<body>
+
+  <div class="container">
+    <h2>Buscador de Planetas (Star Wars)</h2>
+    
+    <form id="formPlaneta">
+      <div class="form-group">
+        <label for="idPlaneta">ID del Planeta:</label>
+        <input type="number" id="idPlaneta" min="1" required placeholder="Ej. 1 para Tatooine">
+        <button type="submit">Consultar</button>
+      </div>
+    </form>
+
+    <div id="animacion" class="loader"></div>
+
+    <div id="resultados" style="display: none;">
+      <h3>Información del Planeta</h3>
+      <ul class="lista-datos" id="listaPlaneta">
+      </ul>
+
+      <h3>Personajes que lo habitan (Residentes)</h3>
+      <ul class="lista-residentes" id="listaResidentes">
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const formulario = document.getElementById("formPlaneta");
+      const inputId = document.getElementById("idPlaneta");
+      const animacion = document.getElementById("animacion");
+      const resultadosDiv = document.getElementById("resultados");
+      
+      const listaPlaneta = document.getElementById("listaPlaneta");
+      const listaResidentes = document.getElementById("listaResidentes");
+
+      function resetUI() {
+        resultadosDiv.style.display = "none";
+        listaPlaneta.innerHTML = "";
+        listaResidentes.innerHTML = "";
+      }
+
+      formulario.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const id = parseInt(inputId.value);
+        
+        if (id <= 0 || isNaN(id)) {
+          alert("ID inválido.");
+          return;
+        }
+        consultarPlaneta(id);
+      });
+
+      async function consultarPlaneta(id) {
+        resetUI();
+        animacion.classList.add("activo");
+
+        try {
+          const URL = `https://swapi.dev/api/planets/${id}/`;
+          const respuesta = await fetch(URL);
+
+          if (!respuesta.ok) {
+            animacion.classList.remove("activo");
+            if (respuesta.status === 404) {
+              alert("Planeta no encontrado.");
+            } else {
+              alert("Error de servidor.");
+            }
+            return;
+          }
+
+          const datos = await respuesta.json();
+          
+          listaPlaneta.innerHTML = `
+            <li><strong>Nombre:</strong> ${datos.name}</li>
+            <li><strong>Periodo de rotación:</strong> ${datos.rotation_period} días</li>
+            <li><strong>Diámetro:</strong> ${datos.diameter} km</li>
+            <li><strong>Gravedad:</strong> ${datos.gravity}</li>
+            <li><strong>Tipo de terreno:</strong> ${datos.terrain}</li>
+            <li><strong>Cantidad de habitantes:</strong> ${datos.population}</li>
+          `;
+
+          listaResidentes.innerHTML = "<li><em>Buscando habitantes...</em></li>";
+          resultadosDiv.style.display = "block";
+          
+          if (datos.residents.length === 0) {
+            listaResidentes.innerHTML = "<li>No hay habitantes registrados en este planeta.</li>";
+          } else {
+            listaResidentes.innerHTML = "";
+            for (let urlResidente of datos.residents) {
+              const res = await fetch(urlResidente);
+              const datosResidente = await res.json();
+              
+              const li = document.createElement("li");
+              li.textContent = datosResidente.name;
+              listaResidentes.appendChild(li);
+            }
+          }
+
+          animacion.classList.remove("activo");
+
+        } catch (error) {
+          animacion.classList.remove("activo");
+          console.error("Hubo un problema con la consulta:", error);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+body { 
+  font-family: Arial, sans-serif; 
+  background-color: #e9ecef; 
+  padding: 20px; 
+}
+.container { 
+  max-width: 600px; 
+  margin: auto; 
+  background: white; 
+  padding: 25px; 
+  border-radius: 8px; 
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+}
+.form-group { 
+  margin-bottom: 15px; 
+}
+input[type="number"] { 
+  padding: 8px; 
+  width: 60%; 
+}
+button { 
+  padding: 9px 15px; 
+  background-color: #28a745; 
+  color: white; 
+  border: none; 
+  border-radius: 4px; 
+  cursor: pointer; 
+}
+button:hover { 
+  background-color: #218838; 
+}
+
+.lista-datos { 
+  background-color: #f8f9fa; 
+  padding: 15px 15px 15px 35px; 
+  border-radius: 5px; 
+  border-left: 4px solid #007bff; 
+}
+.lista-datos li { 
+  margin-bottom: 8px; 
+}
+
+.lista-residentes { 
+  background-color: #fff3cd; 
+  padding: 15px 15px 15px 35px; 
+  border-radius: 5px; 
+  border-left: 4px solid #ffc107; 
+}
+
+.loader {
+  width: 50px; 
+  aspect-ratio: 1; 
+  border-radius: 50%;
+  border: 8px solid; 
+  border-color: #000 #0000;
+  animation: l1 1s infinite;
+  margin: 20px auto; 
+  display: none;
+}
+.loader.activo { 
+  display: block; 
+}
+@keyframes l1 { 
+  to { transform: rotate(.5turn) } 
+}
