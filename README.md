@@ -1,4 +1,5 @@
 Ejercicios 1 y 2 que se dejaron en clase, siguiendo las bases de web 7 y 8 y clases de la semana pasada.
+
 Ejercicio 01: Buscador de Personajes de Star Wars
 Funcionalidad: Permite ingresar un código numérico (ID) para consultar la información de un personaje.
 Datos mostrados: Nombre, estatura, peso, color de cabello y género en un formulario interactivo.
