@@ -8,7 +8,9 @@ Validaciones: Valida que el ID ingresado sea un número válido, gestiona errore
 
 Ejercicio 02: Buscador de Planetas y Residentes
 Funcionalidad: Permite ingresar el ID de un planeta para extraer su información geo-demográfica.
+
 Datos mostrados (Lista 1): Nombre, periodo de rotación, diámetro, gravedad, tipo de terreno y cantidad de habitantes dentro de una lista no ordenada (<ul>).
+
 Listado de Residentes (Lista 2): Realiza un segundo consumo de API de forma iterativa (for...of) utilizando las URLs provistas por el JSON del planeta para traducir y listar los nombres reales de los personajes que lo habitan.
 Validaciones: Manejo de estados de carga, validación de IDs numéricos y ocultamiento dinámico de los resultados hasta completar la petición.
 
